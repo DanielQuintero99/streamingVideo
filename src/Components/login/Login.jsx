@@ -1,10 +1,10 @@
-import React,{useState} from 'react'
+import React from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import Listado from '../HomePage/Listado';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [showList, setshowList] = useState(false);
+  let navigate=useNavigate()
   // funcion para manejar el submit del formulario login, con este se valida que la informacion que ingresa el usuario sea correcta
     const submitHandler=(e)=>{
   // prevent default para evitar que la pagina se recargue tras pulsar el boton submit
@@ -62,7 +62,7 @@ const Login = () => {
       const tokenRecibido=res.data.token;
       // para esta app almacenare el token en el LocalStorage, el cual es un obj, setItem es un metodo mediante el cual se puede guardar algo dentro del ls,recibe dos parametros(nombre de la info y la info correspondiente), en este caso, como el token es un string no necesito hacer stringyfy
      localStorage.setItem('token',tokenRecibido);
-       setshowList(true) 
+       navigate("/listado")
     })
         .catch(res=>{
           Swal.fire({
@@ -75,11 +75,8 @@ const Login = () => {
     }
 
   return (
-    <>{(showList?
-    <Listado/>
-    :
     <>
-    <h1>Bienvenido</h1>
+    <h1>Bienvenido a Tu Peli</h1>
     <form onSubmit={submitHandler}>
         <label>
         <span>Correo Electronico: </span>
@@ -90,8 +87,7 @@ const Login = () => {
         <input type="password" name='password'/>
         </label>
         <button type='submit'>Ingresar</button>
-    </form></>
-    )}
+    </form>
     </>
   )
 }
