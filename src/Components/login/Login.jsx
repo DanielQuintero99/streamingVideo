@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
   let navigate=useNavigate()
@@ -60,8 +60,8 @@ const Login = () => {
         })
       // res.data.token nos devuelve un token el cual es un identificador de inicio de secion, esta enpriptado, por lo cual es compllicado saber quien fue la persona que lo tomo
       const tokenRecibido=res.data.token;
-      // para esta app almacenare el token en el LocalStorage, el cual es un obj, setItem es un metodo mediante el cual se puede guardar algo dentro del ls,recibe dos parametros(nombre de la info y la info correspondiente), en este caso, como el token es un string no necesito hacer stringyfy
-     localStorage.setItem('token',tokenRecibido);
+      // para esta app almacenare el token en el sessionStorage, el cual es un obj, setItem es un metodo mediante el cual se puede guardar algo dentro del ls,recibe dos parametros(nombre de la info y la info correspondiente), en este caso, como el token es un string no necesito hacer stringyfy
+     sessionStorage.setItem('token',tokenRecibido);
        navigate("/listado")
     })
         .catch(res=>{
@@ -73,21 +73,28 @@ const Login = () => {
         })
       
     }
-
+    let token=sessionStorage.getItem("token")
   return (
     <>
-    <h1>Bienvenido a Tu Peli</h1>
-    <form onSubmit={submitHandler}>
-        <label>
-        <span>Correo Electronico: </span>
-        <input type="text" name='email'/>
-        </label>
-        <label>
-        <span>Contraseña: </span>
-        <input type="password" name='password'/>
-        </label>
-        <button type='submit'>Ingresar</button>
-    </form>
+    {
+      !token?
+      <>
+      <h1>Bienvenido a Tu Peli</h1>
+      <form onSubmit={submitHandler}>
+          <label>
+          <span>Correo Electronico: </span>
+          <input type="text" name='email'/>
+          </label>
+          <label>
+          <span>Contraseña: </span>
+          <input type="password" name='password'/>
+          </label>
+          <button type='submit'>Ingresar</button>
+      </form>
+      </> 
+      : 
+      <Navigate to={"/listado"}/>
+    }
     </>
   )
 }
